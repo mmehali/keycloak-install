@@ -13,7 +13,7 @@ PROXY_ADDRESS_FORWARDING = true
    value=${env.PROXY_ADDRESS_FORWARDING:false}                                     \
    )
 ```
-pour le https :
+- pour le https :
 ```
 /subsystem=undertow/server=default-server/https-listener=https: write-attribute(  \
    name=proxy-address-forwarding,                                                 \
