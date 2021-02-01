@@ -1,17 +1,29 @@
-### Préparation du script de lancement du service keycloak
+## Installation de keycloak en service système.
 
-- Copiez le script de lancement de Keycloak launch.sh dans le répertoire /opt/keycloak/bin/
+### Préparation des fichiers de config keycloak
+ -	Créez un répertoire de configuration pour Keycloak sous le répertoire /etc sous le nom keycloak.
+ ```
+  $ sudo mkdir -p /etc/keycloak
+```
+- 	Copiez le fichier de configuration **Keycloak.conf** dans **/etc/keycloak/**
+```
+$ sudo cp /vagrant/service/keycloak.conf /etc/keycloak/
+```
+
+Le fichier **keycloak.conf** est une copie modifiée du fichier **wildfly.conf** qui se trouve dans la 
+distribution keycloak installée sous le répertoire **/opt/keycloak/docs/contrib/scripts/systemd**
+
+
+### configuration du script de lancement de keycloak.
+- Copiez le script de lancement de Keycloak **launch.sh** dans le répertoire **/opt/keycloak/bin/**
 
 ```
-sudo cp ${INSTALL_SRC}/service/keycloak.conf /etc/keycloak/
+sudo cp ${INSTALL_SRC}/service/launch.sh /opt/keycloak/bin/
 ```
 
 Le fichier **launch.sh** est une copie modifiée du fichier **lauch.sh** qui se trouve dans la distribution keycloak 
 sous le répertoire **/opt/keycloak/docs/contrib/scripts/systemd**
 
-```
-sudo cp ${INSTALL_SRC}/service/launch.sh /opt/keycloak/bin/
-```
 -	Nous devons faire de l’utilisateur keycloak propriétaire de ce script afin qu'il puisse l'exécuter:
 ```
 sudo chmod +x /opt/keycloak/bin/launch.sh
