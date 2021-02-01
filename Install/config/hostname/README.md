@@ -18,7 +18,9 @@ Cela permet  aux navigateurs d'envoyer des requêtes à Keycloak via le nom de d
 que les clients internes peuvent utiliser un nom de domaine interne ou une adresse IP.
 
 Cela se reflète dans le point de terminaison OpenID Connect Discovery ci-dessous :
+```
 https://host_et_port_du_proxy_ou_du_LB/auth/realms/master/.well-known/openid-configuration
+```
 Par exemple, où le endpoint d'autorisation utilise l'URL frontend, tandis que token_endpoint utilise 
 l'URL principale. Comme note ici, un client public par exemple contacterait Keycloak via le endpoint 
 public, ce qui veut dire que la base de l’url du endpoint autorisation et du endpoint token serait la même.
