@@ -45,7 +45,7 @@ keycloak sous le répertoire **/opt/keycloak/docs/contrib/scripts/systemd**
 ```
 sudo systemctl daemon-reload
 ```
-- Démarrez et activé le service système keycloak:
+- Démarrez et activez le service système keycloak:
 
 ```
  sudo systemctl start keycloak
