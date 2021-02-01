@@ -1,5 +1,5 @@
 Keycloak peut collecter des statistiques pour divers sous-systèmes qui seront 
-ensuite disponibles dans la console de gestion et le endpoint /metrics. 
+ensuite disponibles dans la console de gestion et le endpoint http:/localhost:9990/metrics. 
 Vous pouvez l'activer avec les variables d'environnement KEYCLOAK_STATISTICS qui 
 prennent une liste de statistiques pour activer:
 
@@ -12,4 +12,7 @@ les sources de données et le sous-système undetow.
 
 La valeur spéciale all active toutes les statistiques.
 
-Une fois activée, vous devriez voir les valeurs de métriques changer sur le endpoint /metrics 
+Une fois activée, vous devriez voir les valeurs de métriques changer sur le endpoint /metrics
+
+- **endpoint health check** :http:/localhost:9990/health
+
