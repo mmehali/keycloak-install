@@ -1,7 +1,7 @@
 embed-server --server-config=standalone-ha.xml --std-out=echo
 batch
 
-echo "   <logger category="org.keycloak">"
+echo "    <logger category="org.keycloak">"
 echo "       <level name="${env.KEYCLOAK_LOGLEVEL:INFO}"/>"
 echo "    </logger>"
 /subsystem=logging/logger=org.keycloak:add

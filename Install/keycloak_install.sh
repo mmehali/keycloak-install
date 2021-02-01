@@ -23,6 +23,7 @@ echo "--------------------------------------------------------------------"
 
 sudo yum install -y wget
 sudo yum install -y nano
+sudo yum install -y jq
 
 echo "--------------------------------------------------------------------"
 echo "Step 1: Installation JDK                                            "
