@@ -47,8 +47,8 @@ then
 else
     echo "Téléchargement de  keycloak-${KEYCLOAK_VERSION} ..."
     echo "depuis "${KEYCLOAK_URL}" "
-    mkdir -p ${INSTALL_SRC}/downloads
-    wget -q -O ${INSTALL_SRC}/downloads/keycloak-${KEYCLOAK_VERSION}.tar.gz "${KEYCLOAK_URL}" 
+    sudo mkdir -p ${INSTALL_SRC}/downloads
+    sudo wget -q -O ${INSTALL_SRC}/downloads/keycloak-${KEYCLOAK_VERSION}.tar.gz "${KEYCLOAK_URL}" 
     #curl -L -o ${INSTALL_SRC}/downloads/keycloak-${KEYCLOAK_VERSION}.tar.gz "${KEYCLOAK_URL}"
 
     if [ $? != 0 ];
