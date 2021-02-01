@@ -1,0 +1,25 @@
+#<spi name="hostname">
+#    <default-provider>default</default-provider>
+#    <provider name="default" enabled="true">
+#        <properties>
+#            <property name="frontendUrl" value="https://smacl.idp.com"/>
+#            <property name="forceBackendUrlToFrontendUrl" value="false"/>
+#        </properties>
+#    </provider>
+#</spi>
+
+/subsystem=keycloak-server/spi=hostname:write-attribute(                 \
+    name=default-provider,                                               \ 
+    value="${keycloak.hostname.provider:default}"                        \
+    )
+
+ 
+/subsystem=keycloak-server/spi=hostname/provider=fixed/:add(             \
+    properties={                                                         \
+        hostname => "${keycloak.hostname.fixed.hostname:localhost}",     \
+        httpPort => "${keycloak.hostname.fixed.httpPort:-1}",            \
+        httpsPort => "${keycloak.hostname.fixed.httpsPort:-1}",          \
+        alwaysHttps => "${keycloak.hostname.fixed.alwaysHttps:false}"    \
+        },                                                               \
+    enabled=true                                                         \
+    )

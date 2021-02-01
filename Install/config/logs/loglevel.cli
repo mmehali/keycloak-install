@@ -1,0 +1,67 @@
+embed-server --server-config=standalone-ha.xml --std-out=echo
+batch
+
+echo "   <logger category="org.keycloak">"
+echo "       <level name="${env.KEYCLOAK_LOGLEVEL:INFO}"/>"
+echo "    </logger>"
+/subsystem=logging/logger=org.keycloak:add
+/subsystem=logging/logger=org.keycloak:write-attribute(name=level,value=${env.KEYCLOAK_LOGLEVEL:INFO})
+
+
+
+echo " <root-logger>"
+echo "  <level name="${env.ROOT_LOGLEVEL:INFO}"/>"
+echo "     <handlers>"
+echo "     <handler name="CONSOLE"/>"
+echo "  </handlers>"
+echo "</root-logger>"          
+/subsystem=logging/root-logger=ROOT:change-root-log-level(level=${env.ROOT_LOGLEVEL:INFO})
+
+echo " - avant :"
+echo " <root-logger>"
+echo "   <level name="INFO"/>"
+echo "   <handlers>"
+echo "      <handler name="CONSOLE"/>"
+echo "      <handler name="FILE"/>"
+echo "   </handlers>"
+echo " </root-logger>"
+
+echo " - apres :"
+echo " <root-logger>"
+echo "   <level name="${env.ROOT_LOGLEVEL:INFO}"/>"
+echo "   <handlers>"
+echo "      <handler name="CONSOLE"/>"
+echo "   </handlers>"
+echo " </root-logger>"
+/subsystem=logging/root-logger=ROOT:remove-handler(name="FILE")
+
+echo " - supprimer :"
+echo " <periodic-rotating-file-handler name="FILE" autoflush="true">"
+echo "   <formatter>"
+echo "     <named-formatter name="PATTERN"/>"
+echo "   </formatter>"
+echo "   <file relative-to="jboss.server.log.dir" path="server.log"/>"
+echo "   <suffix value=".yyyy-MM-dd"/>"
+echo "   <append value="true"/>"
+echo "  </periodic-rotating-file-handler>"
+/subsystem=logging/periodic-rotating-file-handler=FILE:remove
+
+
+echo " - avant"
+echo " <console-handler name="CONSOLE">"
+echo "   <level name="INFO"/>"
+echo "   <formatter>"
+echo "     <named-formatter name="COLOR-PATTERN"/>"
+echo "   </formatter>"
+echo " </console-handler>"
+
+echo " -  apres : "
+echo "<console-handler name="CONSOLE">"
+echo "   <formatter>"
+echo "     <named-formatter name="COLOR-PATTERN"/>"
+echo "   </formatter>"
+echo " </console-handler>"
+/subsystem=logging/console-handler=CONSOLE:undefine-attribute(name=level)
+
+run-batch
+stop-embedded-server

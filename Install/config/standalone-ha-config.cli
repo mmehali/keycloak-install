@@ -1,0 +1,6 @@
+embed-server --server-config=standalone-ha.xml --std-out=echo
+run-batch --file=${INSTALL_SRC}/config/logs/loglevel.cli
+run-batch --file=${INSTALL_SRC}/config/proxy/proxy.cli
+run-batch --file=${INSTALL_SRC}/config/hostname/hostname.cli
+run-batch --file=${INSTALL_SRC}/config/themes/theme.cli
+stop-embedded-server

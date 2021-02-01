@@ -1,0 +1,8 @@
+embed-server --server-config=standalone-ha.xml --std-out=echo
+batch
+
+echo "<channel name="ee" stack="udp" cluster="ejb" statistics-enabled="true"/>"
+
+/subsystem=jgroups/channel=ee:write-attribute(name=statistics-enabled, value=true)
+run-batch
+stop-embedded-server
