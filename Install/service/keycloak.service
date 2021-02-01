@@ -15,9 +15,16 @@ Group=root
 LimitNOFILE=102642
 PIDFile=/var/run/keycloak/keycloak.pid
 
-Environement "-Djava.security.egd=file:/dev/./urandom"              
+Environement=VAR=TEST
+#Environement=java.security.egd=file:/dev/./urandom
 ExecStart=/opt/keycloak/bin/launch.sh $KEYCLAOK_MODE $KEYCLAOK_CONFIG $KEYCLAOK_BIND $KEYCLOAK_MANAGMENT_CONSOLE_BIND
 StandardOutput=null             
 
 [Install]
 WantedBy=multi-user.target
+
+KEYCLOAK_MODE=standalone
+# Configuration pour le mode standalone 
+KEYCLOAK_CONFIG=standalone-ha.xml
+KEYCLOAK_BIND=0.0.0.0
+KEYCLOAK_MANAGMENT_CONSOLE_BIND=0.0.0.0

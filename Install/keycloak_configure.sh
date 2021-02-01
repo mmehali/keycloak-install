@@ -81,6 +81,12 @@ sudo ${INSTALL_SRC}/autorun.sh
 echo "-------------------------------------------------------------------"
 echo "Step 11: ajouter un administateur keycloak                         "
 echo "-------------------------------------------------------------------" 
-sudo /opt/keycloak/bin/add-user-keycloak.sh -u admin -p admin
+sudo /opt/keycloak/bin/add-user-keycloak.sh -u keycloak -p keycloak
+
+echo "-------------------------------------------------------------------"
+echo "Step 12: ajouter un administateur Wildfly                          "
+echo "-------------------------------------------------------------------" 
+sudo /opt/keycloak/bin/add-user.sh -u wildfly -p wildfly 
+
 
 sudo rm -rf /opt/keycloak/standalone/configuration/standalone_xml_history
