@@ -10,4 +10,4 @@ Cela signifie généralement que les utilisateurs seront déconnectés et devron
 ### Spécifier les propriétaires de cache destribué
 - **CACHE_OWNERS_COUNT**: spécifiez le nombre de propriétaires de cache distribué (valeur = nombre de noueds = 2)
 Pour activer la réplication des AuthenticationSessions, utilisez également:
-- **CACHE_OWNERS_AUTH_SESSIONS_COUNT**: Si on utilise les **sessions perssitante**  au niveau du load balancer le cache de l'**authenticationSessions** n'a pas besoin d'être repliqué (valeur=1) 
+- **CACHE_OWNERS_AUTH_SESSIONS_COUNT**: Si on utilise les **sessions perssitantes**  au niveau du load balancer le cache de l'**authenticationSessions** n'a pas besoin d'être repliqué (valeur=1) 
