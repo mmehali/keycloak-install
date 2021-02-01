@@ -6,12 +6,11 @@ KCADM=/opt/keycloak/bin/kcadm.sh
 
 REALM_NAME='intranet'
 
-echo ""
-echo "================================="
-echo "setting up realm $REALM_NAME..."
-echo "================================="
-echo ""
+echo "------------------------------------------------"
+echo "configuration du realm : $REALM_NAME            "
+echo "------------------------------------------------"
 
+echo " - creation du realm :$REAML_NAME"
 createRealm $REALM_NAME
 
 # Active l'enregistrement des "admin events" et leur  representation

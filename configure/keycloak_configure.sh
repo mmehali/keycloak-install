@@ -18,3 +18,6 @@ $KCADM config credentials --server http://$HOST_FOR_KCADM:8080/auth --user $KEYC
 
 source /vagrant/configure/realms/realms_configure.sh
 
+#/opt/keycloak/bin/kcadm.sh config credentials --server http://localhost:8080/auth --user admin --password admin --realm master
+#REALM_EXIST=$(/opt/keycloak/bin/kcadm.sh get realms/intranet)
+ 
