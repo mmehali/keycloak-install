@@ -1,4 +1,4 @@
-## Installation de keycloak en service système.
+## Installation de keycloak en tant que service système.
 
 ### Préparation des fichiers de config keycloak
  -	Créez un répertoire de configuration pour Keycloak sous le répertoire /etc sous le nom keycloak.
