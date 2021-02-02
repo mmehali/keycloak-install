@@ -5,14 +5,14 @@ Before=httpd.service
 
 [Service]
 #------------Postgres ------------
-Environment=DB_DATABASE=keycloak
-Environment=DB_USER=keycloak
-Environment=DB_SCHEMA=public
-Environment=DB_PASSWORD=password
+Environment="DB_DATABASE=keycloak"
+Environment="DB_USER=keycloak"
+Environment="DB_SCHEMA=public"
+Environment="DB_PASSWORD=password"
 
 #------------ Infinispan --------
-Environment=env.CACHE_OWNERS_COUNT=2
-Environment=env.CACHE_OWNERS_AUTH_SESSIONS_COUNT=4
+Environment="env.CACHE_OWNERS_COUNT=2"
+Environment="CACHE_OWNERS_AUTH_SESSIONS_COUNT=4"
 
 EnvironmentFile=-/etc/keycloak/keycloak.conf
 
