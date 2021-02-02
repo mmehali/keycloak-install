@@ -4,7 +4,6 @@ echo "  Install the extra packages repository    "
 echo "-------------------------------------------"
 sudo yum install -y epel-release
 
-
 echo "-------------------------------------------"
 echo " Update the repositories                   "
 echo "-------------------------------------------"
@@ -19,14 +18,16 @@ sudo yum -y install nginx
 # /etc/nginx/conf.d/ in which any .conf type virtual host 
 # file gets loaded.
 #Check that you find at least the default configuration 
-and then restart nginx.
+# and then restart nginx.
 
 sudo cp /vagrant/Install/nginx/load-balancer.conf /etc/nginx/conf.d/load-balancer.conf
 
 echo "--------------------------------------------"
 echo " restart nginx                              "
 echo "--------------------------------------------"
-sudo systemctl restart nginx
+systemctl start nginx.service
+systemctl enable nginx.service
+
 
 # Test that the server replies to HTTP requests. Open the load 
 # balancer server’s public IP address in your web browser. 
@@ -37,7 +38,10 @@ sudo systemctl restart nginx
 # is not blocking your connection. For example on CentOS 7 the 
 # default firewall rules do not allow HTTP traffic, enable it 
 # with the commands below.
-sudo firewall-cmd --add-service=http --permanent
+echo "--------------------------------------------"
+echo " Activer le trafic HHTP sur le firewall     "
+echo "--------------------------------------------"
+sudo firewall-cmd  --permanent --add-service=http
 sudo firewall-cmd --reload
 
 
