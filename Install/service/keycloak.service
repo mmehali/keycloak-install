@@ -14,7 +14,7 @@ Environment="DB_PASSWORD=password"
 Environment="CACHE_OWNERS_COUNT=2"
 Environment="CACHE_OWNERS_AUTH_SESSIONS_COUNT=4"
 
-EnvironmentFile=-/etc/keycloak/keycloak.conf
+EnvironmentFile=/etc/keycloak/keycloak.conf
 
 # A remplacer par user keycloak:keycloak
 User=root
