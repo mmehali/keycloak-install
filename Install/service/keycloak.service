@@ -4,7 +4,13 @@ After=syslog.target network.target
 Before=httpd.service
 
 [Service]
-Environment=LAUNCH_JBOSS_IN_BACKGROUND=1
+#------------Postgres ------------
+Environment=DB_DATABASE: keycloak
+Environment=DB_USER: keycloak
+Environment=DB_SCHEMA: public
+Environment=DB_PASSWORD: password
+
+
 EnvironmentFile=-/etc/keycloak/keycloak.conf
 
 # A remplacer par user keycloak:keycloak
