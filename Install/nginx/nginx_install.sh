@@ -19,8 +19,8 @@ sudo yum -y install nginx
 # file gets loaded.
 #Check that you find at least the default configuration 
 # and then restart nginx.
-
-sudo cp /vagrant/Install/nginx/load-balancer.conf /etc/nginx/conf.d/load-balancer.conf
+sudo rm -r /etc/nginx/conf.d/*
+sudo cp /vagrant/Install/nginx/load-balancer.conf /etc/nginx/conf.d/default.conf
 
 echo "--------------------------------------------"
 echo " restart nginx                              "
