@@ -1,92 +1,117 @@
 #!/usr/bin/env bash
 
-INSTALL_SRC=/vagrant/Install
+#KEYCLOAK_HOME="/opt/keycloak"
+#INSTALL_SRC=/opt/keycloak-install
+
+#DRIVER_VERSION=42.2.5
+
+source keycloak_variables.sh
+
+
+POSTGRESQL_URL=https://repo1.maven.org/maven2/org/postgresql/postgresql/$DRIVER_VERSION/postgresql-$DRIVER_VERSION.jar
+
+
+sudo mv ${KEYCLOAK_HOME}/bin/jboss-cli.xml ${KEYCLOAK_HOME}/bin/jboss-cli.original.xml
+sudo cp ${INSTALL_SRC}/config/cli/jboss-cli.xml ${KEYCLOAK_HOME}/bin/jboss-cli.xml
 
 
 echo "--------------------------------------------------------------------"
 echo "Step 1 : Configuration keycloak : config log, proxy, hostname, etc "
 echo "--------------------------------------------------------------------"
-sudo /opt/keycloak/bin/jboss-cli.sh --file=${INSTALL_SRC}/config/standalone-ha-config.cli --properties=env.properties
+sudo ${KEYCLOAK_HOME}/bin/jboss-cli.sh --file=${INSTALL_SRC}/config/standalone-ha-config.cli --properties=env.properties
 
+ 
 echo "--------------------------------------------------------------------"
 echo "Step 2: Configuration Keycloak : Telechargement du driver postgresql HTTPS [KO]" 
 echo "--------------------------------------------------------------------"
-if [ -f "${INSTALL_SRC}/downloads/postgresql-${POSTGRES_VERSION}.jar" ];
+if [ -f "${INSTALL_SRC}/downloads/postgres-jdbc.jar" ];
    then
-      echo "Installation postgresql depuis ${INSTALL_SRC}/downloads/postgresql-${POSTGRES_VERSION}.jar..."
+      echo "Installation postgresql depuis ${INSTALL_SRC}/downloads/postgresql-${DRIVER_VERSION}.jar..."
    else
-      echo "Téléchargement de  postgresql-${POSTGRES_VERSION}.jar ..."
+      echo "Téléchargement de  postgresql-${DRIVER_VERSION}.jar ..."
       echo "depuis "-${POSTGRESQL_URL}" "
-      wget -q -O ${INSTALL_SRC}/downloads/postgresql-${POSTGRES_VERSION}.jar  "${POSTGRES_URL}"
-      #if [ $? != 0 ];
-      #then
-         # echo "GRAVE: Téléchargement du driver Postgres impossible depuis ${POSTGRESQL_URL}"	
-         # exit 1
-      #fi
-   echo "Installation du driver postgres ..."
+      sudo curl --url $POSTGRESQL_URL  -o ${INSTALL_SRC}/downloads/postgres-jdbc.jar
+      if [ $? != 0 ];
+      then
+          echo "  - GRAVE: Téléchargement du driver Postgres impossible depuis ${POSTGRESQL_URL}"	
+          exit 1
+      fi
+   echo "  - Telechargement du driver termine ..."
 fi
 
 
-#echo "--------------------------------------------------------------------"
-#echo "Step 3: Configuration Keycloak : installation du Module postgres    "
-#echo "--------------------------------------------------------------------" 
-#sudo mkdir -p /opt/keycloak/modules/system/layers/base/org/postgresql/jdbc/main
-#sudo cp ${INSTALL_SRC}/downloads/postgresql-${POSTGRES_VERSION}.jar /opt/keycloak/modules/system/layers/base/org/postgresql/jdbc/main/
-#sudo cp ${INSTALL_SRC}/config/postgres/module.xml /opt/keycloak/modules/system/layers/base/org/postgresql/jdbc/main/
+
+echo "--------------------------------------------------------------------"
+echo "Step 3: Installation du Module postgres                             "
+echo "--------------------------------------------------------------------" 
+sudo mkdir -p ${KEYCLOAK_HOME}/modules/system/layers/base/org/postgresql/jdbc/main/
+sudo cp ${INSTALL_SRC}/downloads/postgres-jdbc.jar ${KEYCLOAK_HOME}/modules/system/layers/base/org/postgresql/jdbc/main/
+sudo cp ${INSTALL_SRC}/config/postgres/module.xml ${KEYCLOAK_HOME}/modules/system/layers/base/org/postgresql/jdbc/main/
+sudo chmod 777 ${KEYCLOAK_HOME}/modules/system/layers/base/org/postgresql/jdbc/main/
 
     
 echo "-------------------------------------------------------------------------"
-echo "Step 4 : Configuration keycloak : configuration de datasource postgres  "
+echo "Step 4 : configuration de datasource postgres                            "
 echo "-------------------------------------------------------------------------"
-#sudo /opt/keycloak/bin/jboss-cli.sh --file=${INSTALL_SRC}/config/postgres/standalone-ha-config.cli  --properties=env.properties
+sudo ${KEYCLOAK_HOME}/bin/jboss-cli.sh --file=${INSTALL_SRC}/config/postgres/standalone-ha-config.cli
+
+
+
+echo "-------------------------------------------------------------------------"
+echo "Step 5 : configuration du caches distribues (infinspan)                  "
+echo "-------------------------------------------------------------------------"
+sudo ${INSTALL_SRC}/config/infinispan/infinispan.sh
 
 
 echo "-------------------------------------------------------------------------"
-echo "Step 5 : Configuration keycloak : configuration du keystore x509         "
+echo "Step 6 :  configuration des metriques                                    "
+echo "-------------------------------------------------------------------------"
+sudo ${INSTALL_SRC}/config/metrics/statistics.sh
+
+
+
+echo "-------------------------------------------------------------------------"
+echo "Step 7 : configuration du keystore x509                                  "
 echo "-------------------------------------------------------------------------"    
 sudo ${INSTALL_SRC}/config/keystore/x509_keystore.sh
 
+
+
 echo "-------------------------------------------------------------------------"
-echo "Step 6 : Configuration keycloak : configuration du truststore) x509      "
+echo "Step 8 : configuration du truststore x509      "
 echo "-------------------------------------------------------------------------"    
 sudo ${INSTALL_SRC}/config/truststore/x509_truststore.sh
 
 
+
 echo "-------------------------------------------------------------------------"
-echo "Step 7 : Configuration keycloak : configuration des jgroups             "
+echo "Step 9 : configuration des jgroups                                       "
 echo "-------------------------------------------------------------------------"
 sudo ${INSTALL_SRC}/config/jgroups/jgroups.sh
     
-echo "-------------------------------------------------------------------------"
-echo "Step 8 : Configuration keycloak : configuration du cache (infinspan)    "
-echo "-------------------------------------------------------------------------"
-sudo ${INSTALL_SRC}/config/infinispan/infinispan.sh
     
 echo "-------------------------------------------------------------------------"
-echo "Step 9 : Configuration keycloak : configuration des statistiques        "
+echo "Step 10 : Configuration keycloak : lancement de scripts spécifiques      "
 echo "-------------------------------------------------------------------------"
-sudo ${INSTALL_SRC}/config/metrics/statistics.sh
+sudo ${INSTALL_SRC}/config/startup_scripts/autorun.sh
     
+
 echo "-------------------------------------------------------------------------"
-echo "Step 10 : Configuration keycloak : configuration vault                   "
+echo "Step 11 : Configuration keycloak : configuration vault                   "
 echo "-------------------------------------------------------------------------"
 sudo ${INSTALL_SRC}/config/vault/vault.sh
     
-echo "-------------------------------------------------------------------------"
-echo "Step 11 : Configuration keycloak : lancement de scripts spécifiques      "
-echo "-------------------------------------------------------------------------"
-sudo ${INSTALL_SRC}/autorun.sh
-    
-    
+exit 1
+
 echo "-------------------------------------------------------------------"
 echo "Step 11: ajouter un administateur keycloak                         "
 echo "-------------------------------------------------------------------" 
-sudo /opt/keycloak/bin/add-user-keycloak.sh -u keycloak -p keycloak
+sudo ${KEYCLOAK_HOME}/bin/add-user-keycloak.sh -u keycloak -p keycloak
 
 echo "-------------------------------------------------------------------"
 echo "Step 12: ajouter un administateur Wildfly                          "
 echo "-------------------------------------------------------------------" 
-sudo /opt/keycloak/bin/add-user.sh -u wildfly -p wildfly 
+sudo ${KEYCLOAK_HOME}/bin/add-user.sh -u wildfly -p wildfly 
 
 
-sudo rm -rf /opt/keycloak/standalone/configuration/standalone_xml_history
+sudo rm -rf ${KEYCLOAK_HOME}/standalone/configuration/standalone_xml_history

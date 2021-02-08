@@ -1,11 +1,10 @@
 #!/bin/bash
 
-INSTALL_SRC=/vagrant/Install
+KEYCLOAK_HOME=/opt/keycloak
 
-if [ -d "/opt/keycloak/secrets" ]; then
-    echo "set plaintext_vault_provider_dir=/opt/keycloak/secrets" >> "/opt/keycloak/bin/.jbossclirc"
-
-    echo "set configuration_file=standalone-ha.xml" >> "/opt/keycloak/bin/.jbossclirc"
-    /opt/keycloak/bin/jboss-cli.sh --file=${INSTALL_SRC}/config/files-plaintext-vault.cli   --properties=env.properties
+if [ -d "${KEYCLOAK_HOME}/secrets" ]; then
+    echo "set plaintext_vault_provider_dir=${KEYCLOAK_HOME}/secrets" >> "${KEYCLOAK_HOME}/bin/.jbossclirc"
+    echo "set configuration_file=standalone-ha.xml" >> "${KEYCLOAK_HOME}/bin/.jbossclirc"
+    /opt/keycloak/bin/jboss-cli.sh --file=config/files-plaintext-vault.cli   
     sed -i '$ d' "/opt/keycloak/bin/.jbossclirc"
 fi

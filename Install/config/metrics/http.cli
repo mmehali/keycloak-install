@@ -1,8 +1,6 @@
 embed-server --server-config=standalone-ha.xml --std-out=echo
 batch
-echo "<subsystem xmlns="urn:jboss:domain:undertow:11.0" default-server="default-server" "
-eech "         default-virtual-host="default-host" default-servlet-container="default" "
-echo "         default-security-domain="other" statistics-enabled="true">"
+# <subsystem xmlns="urn:jboss:domain:undertow:11.0" default-server="default-server eech default-virtual-host="default-host" default-servlet-container="default"   default-security-domain="other" statistics-enabled="true">
 /subsystem=undertow:write-attribute(name=statistics-enabled,value=true)
 run-batch
 stop-embedded-server

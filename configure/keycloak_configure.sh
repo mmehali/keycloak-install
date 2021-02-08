@@ -3,21 +3,23 @@
 set -euo pipefail
 
 KCADM=/opt/keycloak/bin/kcadm.sh
-KEYCLOAK_USER=admin
-KEYCLOAK_PASSWORD=admin
-HOST_FOR_KCADM=localhost
+KEYCLOAK_USER=keycloak
+KEYCLOAK_PASSWORD=keycloak
+KEYCLOAK_HOST=http://127.0.0.1:8080/auth
 echo "--------------------------------------------------------"
-echo "        Configuration keycloak                          "
+echo " Configuration keycloak                                 "
 echo "--------------------------------------------------------"
 
-source /vagrant/configure/utils/realm_utils.sh
-source /vagrant/configure/utils/user_utils.sh
-source /vagrant/configure/utils/client_utils.sh
+source utils/realm_utils.sh
+source utils/user_utils.sh
+source utils/client_utils.sh
+source utils/provider_utils.sh
+source utils/authent_utils.sh
 
-$KCADM config credentials --server http://$HOST_FOR_KCADM:8080/auth --user $KEYCLOAK_USER --password $KEYCLOAK_PASSWORD --realm master
+echo " - connexion au serveur $KEYCLOAK_HOST"
+$KCADM config credentials --server $KEYCLOAK_HOST --realm master --user $KEYCLOAK_USER --password $KEYCLOAK_PASSWORD 
 
-source /vagrant/configure/realms/realms_configure.sh
-
-#/opt/keycloak/bin/kcadm.sh config credentials --server http://localhost:8080/auth --user admin --password admin --realm master
-#REALM_EXIST=$(/opt/keycloak/bin/kcadm.sh get realms/intranet)
+source realms/realms_configure.sh
+ 
+#/opt/keycloak/bin/kcadm.sh config credentials --server http://127.0.0.1:8080/auth --realm master --user keycloak --password keycloak 
  

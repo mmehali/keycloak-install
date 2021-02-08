@@ -7,6 +7,7 @@ batch
    add-index=0,                                               \
    data-source=KeycloakDS,                                    \
    properties=$keycloak_jgroups_discovery_protocol_properties \
+   #properties={initial_hosts=>172.21.48.4[7600],172.21.48.39[7600]} \
    )
 
 /subsystem=jgroups/stack=tcp/protocol=MPING:remove()
@@ -14,11 +15,13 @@ batch
    add-index=0,                                               \
    data-source=KeycloakDS,                                    \ 
    properties=$keycloak_jgroups_discovery_protocol_properties \
+   #properties={initial_hosts=>172.21.48.4[7600],172.21.48.39[7600]} \
    )
 
 /subsystem=jgroups/channel=ee:write-attribute(                \
    name="stack",                                              \
    value=$keycloak_jgroups_transport_stack                    \
+   #value=tcp                                                  \
    )
    
 run-batch

@@ -1,0 +1,60 @@
+/opt/keycloak/bin/kcadm.sh config credentials --server http://localhost:8080/auth --user keycloak --password keycloak --realm master
+
+
+PARENT_ID=$(/opt/keycloak/bin/kcadm.sh get realms/demorealm --fields id --format csv --noquotes)
+
+#/opt/keycloak/bin/kcadm.sh create identity-provider/instances -r intranet -s alias="ldap-provider-alias" -s displayName="display-name" -s providerId=provide
+
+
+# Creation de ldap provider
+/opt/keycloak/bin/kcadm.sh create components -r demorealm -s name=kerberos-ldap-provider -s providerId=ldap -s providerType=org.keycloak.storage.UserStorageProvider -s parentId=demorealm -s 'config.priority=["1"]' -s 'config.fullSyncPeriod=["-1"]' -s 'config.changedSyncPeriod=["-1"]' -s 'config.cachePolicy=["DEFAULT"]' -s config.evictionDay=[] -s config.evictionHour=[] -s config.evictionMinute=[] -s config.maxLifespan=[] -s 'config.batchSizeForSync=["1000"]' -s 'config.editMode=["WRITABLE"]' -s 'config.syncRegistrations=["false"]' -s 'config.vendor=["other"]' -s 'config.usernameLDAPAttribute=["uid"]' -s 'config.rdnLDAPAttribute=["uid"]' -s 'config.uuidLDAPAttribute=["entryUUID"]' -s 'config.userObjectClasses=["inetOrgPerson, organizationalPerson"]' -s 'config.connectionUrl=["ldap://localhost:10389"]' -s 'config.usersDn=["ou=People,dc=keycloak,dc=org"]' -s 'config.authType=["simple"]' -s 'config.bindDn=["uid=admin,ou=system"]' -s 'config.bindCredential=["secret"]' -s 'config.searchScope=["1"]' -s 'config.useTruststoreSpi=["ldapsOnly"]' -s 'config.connectionPooling=["true"]' -s 'config.pagination=["true"]' -s 'config.allowKerberosAuthentication=["true"]' -s 'config.serverPrincipal=["HTTP/localhost@KEYCLOAK.ORG"]' -s 'config.keyTab=["http.keytab"]' -s 'config.kerberosRealm=["KEYCLOAK.ORG"]' -s 'config.debug=["true"]' -s 'config.useKerberosForPasswordAuthentication=["true"]'
+
+#Adding a user attribute LDAP mapper (parentId du provider?)
+/opt/keycloak/bin/kcadm.sh get components  -r intranet -q name=ldap-provider  --fields id --format csv --noquotes
+/opt/keycloak/bin/kcadm.sh create components -r demorealm -s name=user-attribute-ldap-mapper -s providerId=user-attribute-ldap-mapper -s providerType=org.keycloak.storage.ldap.mappers.LDAPStorageMapper -s parentId=ddd9570d-2835-4e4e-b64c-af53c06b23fe -s 'config."user.model.attribute"=["email"]' -s 'config."ldap.attribute"=["mail"]' -s 'config."read.only"=["false"]' -s 'config."always.read.value.from.ldap"=["false"]' -s 'config."is.mandatory.in.ldap"=["false"]'
+
+
+
+/*
+     -s "clientId": "PortailSmacl",
+     -s "rootUrl": "http://localhost:8081",
+     -s "adminUrl": "http://localhost:8081",
+     -s "surrogateAuthRequired": false,
+     -s "enabled": true,
+     -s "alwaysDisplayInConsole": false,
+     -s "clientAuthenticatorType": "client-secret",
+     -s "secret": "**********",
+     -s "redirectUris": ["http://localhost:8081/*"],
+     -s "webOrigins": ["http://localhost:8081"],
+     -s "notBefore": 0,
+     -s "bearerOnly": false,
+     -s "consentRequired": false,
+     -s "standardFlowEnabled": true,
+     -s "implicitFlowEnabled": false,
+     -s "directAccessGrantsEnabled": true,
+     -s "serviceAccountsEnabled": false,
+     -s "publicClient": true,
+     -s "frontchannelLogout": false,
+     -s "protocol": "openid-connect",
+     -s "attributes": {
+        "saml.assertion.signature": "false",
+        "saml.force.post.binding": "false",
+        "saml.multivalued.roles": "false",
+        "saml.encrypt": "false",
+        "saml.server.signature": "false",
+        "saml.server.signature.keyinfo.ext": "false",
+        "exclude.session.state.from.auth.response": "false",
+        "saml_force_name_id_format": "false",
+        "saml.client.signature": "false",
+        "tls.client.certificate.bound.access.tokens": "false",
+        "saml.authnstatement": "false",
+        "display.on.consent.screen": "false",
+        "saml.onetimeuse.condition": "false"
+      },
+     -s "authenticationFlowBindingOverrides": {},
+     -s "fullScopeAllowed": true,
+     -s "nodeReRegistrationTimeout": -1,
+     -s "defaultClientScopes": ["web-origins","role_list","roles","profile","email"],
+     -s "optionalClientScopes": ["address","phone","offline_access","microprofile-jwt"]
+    },
+*/

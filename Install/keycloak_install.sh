@@ -1,17 +1,16 @@
 #!/usr/bin/env bash
+source keycloak_variables.sh
 
-export INSTALL_SRC=/vagrant/Install
-printenv > env.properties
-
-KEYCLOAK_VERSION=11.0.3
-POSTGRES_VERSION=42.2.18
 KEYCLOAK_URL=http://downloads.jboss.org/keycloak/${KEYCLOAK_VERSION}/keycloak-${KEYCLOAK_VERSION}.tar.gz
-POSTGRESQL_URL=https://jdbc.postgresql.org/download/postgresql-${POSTGRES_VERSION}.jar
- 
+
+
 
 echo "===================================================================="
 echo "                      INSTALLATION KEYCLOAK                         "
 echo "===================================================================="
+sudo mkdir -p ${INSTALL_SRC}
+sudo cp -r * ${INSTALL_SRC}
+ 
 
 echo "--------------------------------------------------------------------"
 echo " Etape 0: Mise a jour des packages                                  "
@@ -20,10 +19,10 @@ echo "--------------------------------------------------------------------"
 #sudo yum clean all -y
 #sudo yum update -y
 
-
 sudo yum install -y wget
 sudo yum install -y nano
 sudo yum install -y jq
+
 
 echo "--------------------------------------------------------------------"
 echo "Step 1: Installation JDK                                            "
@@ -36,7 +35,7 @@ echo "--------------------------------------------------------------------"
 echo "Step 2: Creation d'un user/group keycloak:keycloak                  "
 echo "--------------------------------------------------------------------"
 #sudo groupadd -r keycloak                   #pb
-#sudo useradd  -r -g keycloak -d /opt/keycloak -s /sbin/nologin keycloak #pb
+#sudo useradd  -r -g keycloak -d ${KEYCLOAK_HOME} -s /sbin/nologin keycloak #pb
 
 
 echo "--------------------------------------------------------------------"
@@ -50,16 +49,13 @@ else
     echo "depuis "${KEYCLOAK_URL}" "
     sudo mkdir -p ${INSTALL_SRC}/downloads
     sudo wget -q -O ${INSTALL_SRC}/downloads/keycloak-${KEYCLOAK_VERSION}.tar.gz "${KEYCLOAK_URL}" 
-    #curl -L -o ${INSTALL_SRC}/downloads/keycloak-${KEYCLOAK_VERSION}.tar.gz "${KEYCLOAK_URL}"
-
     if [ $? != 0 ];
     then
         echo "GRAVE: Téléchargement impossible depuis ${KEYCLOAK_URL}"	
         exit 1
     fi
-    echo "Installation Keycloak ..."
+    echo "Telechargement termine ..."
 fi
-
 
 
 echo "--------------------------------------------------------------------"
@@ -68,46 +64,59 @@ echo "--------------------------------------------------------------------"
 sudo tar xfz ${INSTALL_SRC}/downloads/keycloak-${KEYCLOAK_VERSION}.tar.gz -C /opt
 
 
-
 echo "--------------------------------------------------------------------"
-echo "Step 5: Creation d'un lien symbolique /opt/keycloak pointant sur    "
-echo "        le rep d'install /opt/keycloak-${KEYCLOAK_VERSION}          "
+echo "Step 5: Creation d'un lien symbolique ${KEYCLOAK_HOME} pointant sur "
+echo "        le rep d'install ${KEYCLOAK_HOME}-${KEYCLOAK_VERSION}       "
 echo "--------------------------------------------------------------------"
-sudo ln -sfn /opt/keycloak-${KEYCLOAK_VERSION} /opt/keycloak
-
-
-
-echo "--------------------------------------------------------------------"
-echo "Step 6: Permettre au user keycloak:keycloak d'execute keycloak [KO] "
-echo "--------------------------------------------------------------------"
-#sudo chown -R keycloak:keycloak /opt/keycloak   #pb
+sudo ln -sfn ${KEYCLOAK_HOME}-${KEYCLOAK_VERSION} ${KEYCLOAK_HOME}
 
 
 
 echo "--------------------------------------------------------------------"
-echo "Step 7: Limiter l'acces au repertoire standalone [KO]               "
-echo "--------------------------------------------------------------------" 
-#sudo -u keycloak chmod 700 /opt/keycloak/standalone   #pb
-#sudo chmod 777 /opt/keycloak/standalone
+echo "Step 6: Permettre au user keycloak:keycloak d'executer keycloak [KO] "
+echo "--------------------------------------------------------------------"
+#sudo chown -R keycloak:keycloak ${KEYCLOAK_HOME}   #pb
 
 
-echo "====================================================================="
-echo "                       CONFIGURATION KEYCLOAK                        "
-echo "====================================================================="
-configured_file="/opt/keycloak/configured"
-if [ ! -e "$configured_file" ]; then
-    touch "$configured_file"
-    sudo ${INSTALL_SRC}/keycloak_configure.sh
-fi
+#echo "--------------------------------------------------------------------"
+#echo "Step 7: Limiter l'acces au repertoire standalone [KO]               "
+#echo "--------------------------------------------------------------------" 
+#sudo -u keycloak chmod 700 ${KEYCLOAK_HOME}/standalone   #pb
+sudo chmod 777 ${KEYCLOAK_HOME}/standalone
 
-echo "===================================================================="
-echo "                      BOOTSTRAP KEYCLOAK                            "
-echo "===================================================================="
-sudo ${INSTALL_SRC}/keycloak_startup.sh
+echo "--------------------------------------------------------------------"
+echo "Step 8 : Backup : copier le fichier standalone-ha.xml dans ${INSTALL_SRC}/backup/standalone-ha.orginal.xml   "
+echo "--------------------------------------------------------------------"
+sudo mkdir -p ${INSTALL_SRC}/backup
+sudo cp ${KEYCLOAK_HOME}/standalone/configuration/standalone-ha.xml ${INSTALL_SRC}/backup/standalone-ha.orginal.xml
 
 
-echo "===================================================================="
-echo "                      Configure REALMS                              "
-echo "===================================================================="
-sudo /vagrant/configure/keycloak_configure.sh
+#sudo mv ${KEYCLOAK_HOME}/bin/jboss-cli.xml ${KEYCLOAK_HOME}/bin/jboss-cli.original.xml
+#sudo cp ${INSTALL_SRC}/config/cli/jboss-cli.xml ${KEYCLOAK_HOME}/bin/jboss-cli.xml
+
+#echo "====================================================================="
+#echo "                       CONFIGURATION KEYCLOAK                        "
+#echo "====================================================================="
+#configured_file="${KEYCLOAK_HOME}/configured"
+#if [ ! -e "$configured_file" ]; then
+#    touch "$configured_file"
+#    sudo ${INSTALL_SRC}/keycloak_configure.sh
+#fi
+
+#echo "--------------------------------------------------------------------"
+#echo "Step 10 : Backup : copier le fichier standalone-ha.xml dans backup  "
+#echo "--------------------------------------------------------------------"
+#sudo cp ${KEYCLOAK_HOME}/standalone/configuration/standalone-ha.xml ${INSTALL_SRC}/backup/standalone-ha.actual.xml
+
+
+#echo "===================================================================="
+#echo "                      BOOTSTRAP KEYCLOAK                            "
+#echo "===================================================================="
+#sudo ${INSTALL_SRC}/keycloak_startup.sh
+
+
+#echo "===================================================================="
+#echo "                      Configure REALMS                              "
+#echo "===================================================================="
+#sudo ${INSTALL_SRC}/../configure/keycloak_configure.sh
 

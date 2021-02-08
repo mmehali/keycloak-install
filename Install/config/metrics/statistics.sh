@@ -1,16 +1,21 @@
 #!/bin/bash
 
-INSTALL_SRC=/vagrant/Install
-# "all" pour activer les 3.
-KEYCLOAK_STATISTICS=db,http,jgroups
+INSTALL_SRC=/opt/keycloak-install
+KEYCLOAK_HOME=/opt/keycloak
+ 
+echo "-----------------------------------------------------------"
+echo " - configration des metriques http                         "
+echo "-----------------------------------------------------------"
+sudo ${KEYCLOAK_HOME}/bin/jboss-cli.sh --file=${INSTALL_SRC}/config/metrics/http.cli 
 
-if [ -n "$KEYCLOAK_STATISTICS" ]; then
-   IFS=',' read -ra metrics <<< "$KEYCLOAK_STATISTICS"
-   for file in ${INSTALL_SRC}/config/metrics/*.cli; do
-      name=${file##*/}
-      base=${name%.cli}
-      if [[  $KEYCLOAK_STATISTICS == *"$base"* ]] || [[  $KEYCLOAK_STATISTICS == *"all"* ]];  then
-         sudo /opt/keycloak/bin/jboss-cli.sh --file="$file"  --properties=env.properties >& /dev/null
-      fi
-   done
-fi
+echo "-----------------------------------------------------------"
+echo " - configration des metriques de la base de données        "
+echo "-----------------------------------------------------------"
+sudo ${KEYCLOAK_HOME}/bin/jboss-cli.sh --file=${INSTALL_SRC}/config/metrics/db.cli 
+
+
+echo "-----------------------------------------------------------"
+echo " - configration des metriques des les jgroups              "
+echo "-----------------------------------------------------------"
+sudo ${KEYCLOAK_HOME}/bin/jboss-cli.sh --file=${INSTALL_SRC}/config/metrics/jgroups.cli
+

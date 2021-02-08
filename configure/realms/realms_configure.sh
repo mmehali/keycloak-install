@@ -3,8 +3,9 @@
 set -euo pipefail
 
 echo "----------------------------------------------"
-echo "               Configuration des realms       "
+echo " Configuration des realms                     "
 echo "----------------------------------------------"
 
-source /vagrant/configure/realms/master/realm_master.sh
-source /vagrant/configure/realms/intranet/realm_intranet.sh
+source realms/master/realm_master.sh
+source realms/federation/swissid.sh
+source realms/intranet/realm_intranet.sh

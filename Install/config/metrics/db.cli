@@ -1,7 +1,7 @@
 embed-server --server-config=standalone-ha.xml --std-out=echo
 batch
 
-echo "<datasource jndi-name="java:jboss/datasources/KeycloakDS" pool-name="KeycloakDS" enabled="true" use-java-context="true" statistics-enabled="true">"
+# <datasource jndi-name="java:jboss/datasources/KeycloakDS" pool-name="KeycloakDS" enabled="true" use-java-context="true" statistics-enabled="true">
 
 /subsystem=datasources/data-source=KeycloakDS:write-attribute(   \
   name=statistics-enabled,                                       \
