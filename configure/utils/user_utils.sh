@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
-
 # Creation d'un utilisateur avec un username s'il n'existe pas et retourrne son id.
 createUser() {
     # arguments
