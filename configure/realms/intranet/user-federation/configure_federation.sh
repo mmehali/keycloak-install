@@ -11,22 +11,18 @@ echo "      ${REALM_NAME} id : $REALM_ID "
 
 echo "      - creation de ldap-provider $PROVIDER_NAME" 
 $KCADM create components -r $REALM_NAME -s name=$PROVIDER_NAME -s parentId=$REALM_ID -s providerId=ldap -s providerType=org.keycloak.storage.UserStorageProvider -s 'config.priority=["1"]' -s 'config.enabled=["true"]' -s 'config.fullSyncPeriod=["-1"]' -s 'config.changedSyncPeriod=["-1"]' -s 'config.cachePolicy=["DEFAULT"]' -s 'config.evictionDay=[]' -s 'config.evictionHour=[]' -s  config.evictionMinute=[] -s  config.maxLifespan=[] -s 'config.batchSizeForSync=["1000"]' -s 'config.editMode=["READ_ONLY"]' -s 'config.syncRegistrations=["false"]' -s 'config.vendor=["other"]' -s 'config.usernameLDAPAttribute=["uid"]' -s 'config.rdnLDAPAttribute=["uid"]' -s 'config.uuidLDAPAttribute=["entryUUID"]' -s 'config.userObjectClasses=["inetOrgPerson, organizationalPerson"]' -s 'config.connectionUrl=["ldap://ldapdev.smacl.lan:389"]' -s 'config.usersDn=["ou=Utilisateurs,dc=smacl,dc=lan"]' -s 'config.authType=["simple"]' -s 'config.bindDn=["cn=lectureseule,ou=Applications,dc=smac,dc=lan"]' -s 'config.bindCredential=["lectureseule"]' -s 'config.searchScope=["1"]' -s 'config.useTruststoreSpi=["ldapsOnly"]' -s 'config.connectionPooling=["true"]' -s 'config.pagination=["true"]' -s 'config.allowKerberosAuthentication=["false"]'
-#$KCADM create components -r $REALM_NAME -s name=dlab-ldap      -s parentId=$REALM_ID -s providerId=ldap -s providerType=org.keycloak.storage.UserStorageProvider -s 'config.priority=["1"]'                              -s 'config.fullSyncPeriod=["-1"]' -s 'config.changedSyncPeriod=["-1"]' -s 'config.cachePolicy=["DEFAULT"]' -s  config.evictionDay=[]  -s  config.evictionHour=[]  -s  config.evictionMinute=[] -s  config.maxLifespan=[] -s 'config.batchSizeForSync=["1000"]' -s 'config.editMode=["READ_ONLY"]' -s 'config.syncRegistrations=["false"]' -s 'config.vendor=["other"]' -s 'config.usernameLDAPAttribute=["$ }"]' -s 'config.rdnLDAPAttribute=["${}"]' -s 'config.uuidLDAPAttribute=["${tr}"]'     -s 'config.userObjectClasses=["inetOrgPerson, organizationalPerson"]' -s 'config.connectionUrl=["ldap://${ldap_host}:389"]'      -s 'config.usersDn=["${ldap_users_group},${ldap_dn}"]'  -s 'config.authType=["simple"]' -s 'config.bindDn=["${ldap_user},${ldap_dn}"]'                        -s 'config.bindCredential=["${ldap_bi}"]'   -s 'config.searchScope=["1"]' -s 'config.useTruststoreSpi=["ldapsOnly"]' -s 'config.connectionPooling=["true"]' -s 'config.pagination=["true"]' --server http://127.0.0.1:8080/auth
 
-         
+
 echo " - declancher la synchronization de tous les utilisateurs"
 # Use the storage provider’s id attribute to compose an endpoint URI, such as 
 # user-storage/ID_OF_USER_STORAGE_INSTANCE/sync.
 # Add the action=triggerFullSync query parameter and run the create command.
 #$KCADM create user-storage/$PROVIDER_ID/sync?action=triggerFullSync
 
-
-
 ROLE_MAPPER_NAME=PortailSmaclRoleMapper
 parentId=$($KCADM get components -r $REALM_NAME --query name=$PROVIDER_NAME | /usr/bin/jq -er '.[].id')
 echo " - creation du mapper [$ROLE_MAPPER_NAME] de type [role-ldap-mapper]"
-    
-           
+             
 PROVIDER_ID=$($KCADM get components -r $REALM_NAME -q name=$PROVIDER_NAME  --fields id --format csv --noquotes)
 echo "PROVIDER_ID :$PROVIDER_ID"
 echo "MAPPER_NAME :$ROLE_MAPPER_NAME"
