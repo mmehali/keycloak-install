@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-# creation d'un nouveau client et l'activé.
-# le client n'est creer que s'il n'exite pas.
+# creation et activation d'un nouveau client.
+# le client n'est crée que s'il n'exite pas.
 createClient() {
     # arguments
     REALM_NAME=$1
