@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
-
-
-# create a top level flow for the given alias if it doesn't exist yet and return the object id
+# creer un top level flow avec l'alias fourni s'il n'existe pas et retourne son id
 createTopLevelFlow() {
     # arguments
     REALM_NAME=$1
@@ -37,7 +34,7 @@ getTopLevelFlow() {
     echo $(sed -e 's/"//g' <<< $ID)
 }
 
-# create a new execution for a given providerId (the providerId is defined by AuthenticatorFactory)
+# Créeer une noouvelle execution pour le providerId fourni
 createExecution() {
     # arguments
     REALM_NAME=$1
@@ -49,7 +46,7 @@ createExecution() {
     $KCADM update authentication/flows/"$FLOW"/executions -b '{"id":"'"$EXECUTION_ID"'","requirement":"'"$REQUIREMENT"'"}' -r "$REALM_NAME"
 }
 
-# create a new subflow
+# creer un nouveau subflow
 createSubflow() {
     # arguments
     REALM_NAME=$1
