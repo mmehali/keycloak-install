@@ -6,6 +6,7 @@ KCADM=/opt/keycloak/bin/kcadm.sh
 KEYCLOAK_USER=keycloak
 KEYCLOAK_PASSWORD=keycloak
 KEYCLOAK_HOST=http://127.0.0.1:8080/auth
+
 echo "--------------------------------------------------------"
 echo " Configuration keycloak                                 "
 echo "--------------------------------------------------------"

@@ -1,0 +1,21 @@
+/opt/keycloak/bin/kcadm.sh create components -r intranet -f << EOF 
+{ 
+  "name": "${MAPPER_NAME}-new", 
+  "providerId": "role-ldap-mapper", 
+  "parentId": "${PROVIDER_ID}", 
+   "providerType": "org.keycloak.storage.ldap.mappers.LDAPStorageMapper",  
+   "config": { 
+      "mode": [\"READ_ONLY\"],
+      "membership.attribute.type": [\"DN\"], 
+      "user.roles.retrieve.strategy": [\"LOAD_ROLES_BY_MEMBER_ATTRIBUTE\"], 
+      "roles.dn": [\"ou=PortailSmacl,ou=ApplicationsTHEMIS,dc=smacl,dc=lan\"],  
+      "membership.ldap.attribute": [\"member\"], 
+      "membership.user.ldap.attribute": [\"uid\"],  
+      "memberof.ldap.attribute": [\"memberOf\"], 
+      "role.name.ldap.attribute": [\"CN\"], 
+      "use.realm.roles.mapping": [\"false\"],  
+      "client.id": [\"PortailSmacl\"], 
+      "role.object.classes": [\"groupOfNames\"] 
+      } 
+  }
+EOF
