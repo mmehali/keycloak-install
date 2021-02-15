@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
-
 # creation et activation d'un nouveau client.
 # le client n'est crée que s'il n'exite pas.
 createClient() {
